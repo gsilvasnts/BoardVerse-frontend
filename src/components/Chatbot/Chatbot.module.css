@@ -1,0 +1,29 @@
+/* Chatbot.module.css */
+
+.botao {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1040;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #7c4dff, #8e6bff);
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 18px;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+  transition:
+    transform 160ms ease,
+    filter 160ms ease;
+}
+
+.botao:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+}
