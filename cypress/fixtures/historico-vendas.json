@@ -1,0 +1,64 @@
+{
+  "categorias": [
+    { "id": 6, "nome": "Estratégia" },
+    { "id": 7, "nome": "Cartas" },
+    { "id": 8, "nome": "Cooperativos" }
+  ],
+  "resultado": {
+    "categorias": [
+      "Estratégia",
+      "Cartas",
+      "Cooperativos"
+    ],
+    "pontos": [
+      {
+        "periodo": "2026-01",
+        "valores": {
+          "Estratégia": 2789.10,
+          "Cartas": 359.60,
+          "Cooperativos": 999.30
+        }
+      },
+      {
+        "periodo": "2026-02",
+        "valores": {
+          "Estratégia": 709.70,
+          "Cartas": 559.20,
+          "Cooperativos": 99.90
+        }
+      },
+      {
+        "periodo": "2026-03",
+        "valores": {
+          "Estratégia": 1599.60,
+          "Cartas": 269.60,
+          "Cooperativos": 1349.20
+        }
+      },
+      {
+        "periodo": "2026-04",
+        "valores": {
+          "Estratégia": 2389.20,
+          "Cartas": 359.60,
+          "Cooperativos": 699.60
+        }
+      },
+      {
+        "periodo": "2026-05",
+        "valores": {
+          "Estratégia": 2309.30,
+          "Cartas": 649.10,
+          "Cooperativos": 399.60
+        }
+      },
+      {
+        "periodo": "2026-06",
+        "valores": {
+          "Estratégia": 399.90,
+          "Cartas": 179.70,
+          "Cooperativos": 1349.20
+        }
+      }
+    ]
+  }
+}

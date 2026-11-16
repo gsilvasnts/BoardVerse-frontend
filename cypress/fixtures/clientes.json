@@ -1,0 +1,10 @@
+{
+  "clienteValido": {
+    "nome": "Camila Fernandes",
+    "genero": "FEMININO",
+    "dataNascimento": "1994-06-18",
+    "cpf": "35343654029",
+    "email": "camila.fernandes@teste.com",
+    "senha": "Senha@987"
+  }
+}
