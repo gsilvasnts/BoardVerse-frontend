@@ -1,10 +1,15 @@
 import { ChevronDown } from "lucide-react";
 import styles from "./Select.module.css";
 
-function Select({ valor, onChange, opcoes, placeholder }) {
+function Select({ valor, onChange, opcoes, placeholder, ...resto }) {
   return (
     <div className={styles.wrapper}>
-      <select className={styles.select} value={valor} onChange={onChange}>
+      <select
+        className={styles.select}
+        value={valor}
+        onChange={onChange}
+        {...resto}
+      >
         <option value="" disabled>
           {placeholder}
         </option>
