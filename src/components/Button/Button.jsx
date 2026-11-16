@@ -6,6 +6,7 @@ function Button({
   onClick,
   type = "button",
   disabled = false,
+  ...resto
 }) {
   const classeVariante = styles[variante] || styles.primary;
   return (
@@ -14,6 +15,7 @@ function Button({
       onClick={onClick}
       type={type}
       disabled={disabled}
+      {...resto}
     >
       {children}
     </button>
