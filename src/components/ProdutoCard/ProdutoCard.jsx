@@ -1,14 +1,16 @@
 import { ShoppingCart } from "lucide-react";
+import { Link } from "react-router-dom";
 import styles from "./ProdutoCard.module.css";
 
-function ProdutoCard({ imagem, nome, preco, onAdicionarAoCarrinho }) {
+function ProdutoCard({ id, imagem, nome, preco, onAdicionarAoCarrinho }) {
   return (
     <div className={styles.card}>
-      <div className={styles.imageWrapper}>
-        <img src={imagem} alt={nome} className={styles.image} />
-      </div>
-
-      <h3 className={styles.name}>{nome}</h3>
+      <Link to={`/produto/${id}`} className={styles.link}>
+        <div className={styles.imageWrapper}>
+          <img src={imagem} alt={nome} className={styles.image} />
+        </div>
+        <h3 className={styles.name}>{nome}</h3>
+      </Link>
 
       <div className={styles.footer}>
         <span className={styles.price}>

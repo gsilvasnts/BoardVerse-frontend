@@ -8,6 +8,7 @@ import ClientesPage from "../pages/ClientesPage/ClientesPage";
 import CartPage from "../pages/CartPage/CartPage";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
 import CheckoutPage from "../pages/CheckoutPage/CheckoutPage";
+import ProdutoDetalhePage from "../pages/ProdutoDetalhePage/ProdutoDetalhePage";
 
 import SalesPage from "../pages/SalesPage/SalesPage";
 import AdminOrdersPage from "../pages/AdminOrdersPage/AdminOrdersPage";
@@ -37,6 +38,8 @@ function AppRoutes() {
         <Route path="/checkout" element={<CheckoutPage />} />
 
         <Route path="/perfil" element={<ProfilePage />} />
+
+        <Route path="/produto/:id" element={<ProdutoDetalhePage />} />
       </Route>
 
       {/* ÁREA ADMINISTRATIVA */}

@@ -11,6 +11,7 @@ function ProdutoGrid({ produtos, onAdicionarAoCarrinho }) {
       {produtos.map((produto) => (
         <ProdutoCard
           key={produto.id}
+          id={produto.id}
           imagem={produto.imagem}
           nome={produto.nome}
           preco={produto.preco}
