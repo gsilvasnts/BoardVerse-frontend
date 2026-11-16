@@ -1,36 +1,100 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Download } from "lucide-react";
 import Select from "../../components/Select/Select";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import SalesChart from "../../components/SalesChart/SalesChart";
+import { categoriaService } from "../../services/categoriaService";
+import { vendasService } from "../../services/vendasService";
 import styles from "./SalesPage.module.css";
 
-const CATEGORIAS = [
-  { valor: "todos", rotulo: "Todos" },
-  { valor: "tabuleiros", rotulo: "Tabuleiros" },
-  { valor: "cartas", rotulo: "Cartas" },
-  { valor: "dados", rotulo: "Dados" },
-  { valor: "familia", rotulo: "Família" },
+const PALETA = [
+  "#7c4dff",
+  "#4dd8d8",
+  "#f4867a",
+  "#ffb057",
+  "#6fcf97",
+  "#f2c94c",
 ];
 
-const EXIBICOES = [
-  { valor: "unidades", rotulo: "Unidades" },
-  { valor: "faturamento", rotulo: "Faturamento" },
-];
+const CATEGORIAS_GRAFICO = ["Tabuleiros", "Cartas", "Dados", "Família"];
 
-const DADOS_MOCK = [
-  { categoria: "Tabuleiros", valor: 100 },
-  { categoria: "Cartas", valor: 60 },
-  { categoria: "Dados", valor: 30 },
-  { categoria: "Família", valor: 27 },
-];
+function formatarPeriodo(periodo) {
+  const [ano, mes] = periodo.split("-");
+  return `${mes}/${ano}`;
+}
 
 function SalesPage() {
-  const [categoria, setCategoria] = useState("todos");
-  const [dataDe, setDataDe] = useState("2026-08-17");
-  const [dataAte, setDataAte] = useState("2026-08-23");
-  const [exibicao, setExibicao] = useState("unidades");
+  const [categorias, setCategorias] = useState([]);
+  const [selecionadas, setSelecionadas] = useState([]);
+  const [dataInicio, setDataInicio] = useState("");
+  const [dataFim, setDataFim] = useState("");
+  const [resultado, setResultado] = useState(null);
+  const [carregando, setCarregando] = useState(false);
+  const [erro, setErro] = useState(null);
+
+  useEffect(() => {
+    categoriaService
+      .listar()
+      .then((lista) => {
+        setCategorias(lista);
+        setSelecionadas(lista.map((c) => c.id));
+      })
+      .catch(() => setErro("Não foi possível carregar as categorias."));
+  }, []);
+
+  const cores = Object.fromEntries(
+    categorias.map((c, i) => [c.id, PALETA[i % PALETA.length]]),
+  );
+
+  const periodoInvalido = dataInicio && dataFim && dataFim < dataInicio;
+
+  const podeConsultar =
+    dataInicio &&
+    dataFim &&
+    !periodoInvalido &&
+    selecionadas.length > 0 &&
+    !carregando;
+
+  function alternarCategoria(id) {
+    setSelecionadas((atual) =>
+      atual.includes(id) ? atual.filter((x) => x !== id) : [...atual, id],
+    );
+  }
+
+  async function handleConsultar() {
+    try {
+      setCarregando(true);
+      setErro(null);
+      setResultado(
+        await vendasService.consultar({
+          inicio: dataInicio,
+          fim: dataFim,
+          categorias: selecionadas,
+        }),
+      );
+    } catch (e) {
+      setResultado(null);
+      setErro(
+        e.response?.status === 403
+          ? "Acesso restrito ao administrador."
+          : (e.response?.data?.message ??
+              "Não foi possível consultar as vendas."),
+      );
+      console.log(e);
+    } finally {
+      setCarregando(false);
+    }
+  }
+
+  const dadosGrafico = resultado?.pontos.map((p) => ({
+    periodo: formatarPeriodo(p.periodo),
+    ...p.valores,
+  }));
+
+  const categoriasNoGrafico = categorias.filter((c) =>
+    resultado?.categorias.includes(c.nome),
+  );
 
   function handleExportarGrafico() {
     console.log("Exportando gráfico...", {
@@ -46,60 +110,72 @@ function SalesPage() {
       <h1 className={styles.title}>Histórico De Vendas</h1>
 
       <div className={styles.card}>
-        <span className={styles.filterLabel}>Filtrar por:</span>
-
         <div className={styles.filtersRow}>
-          <div className={styles.field}>
-            <label className={styles.label}>Categoria</label>
-            <Select
-              valor={categoria}
-              onChange={(e) => setCategoria(e.target.value)}
-              opcoes={CATEGORIAS}
-              placeholder="Selecionar"
-            />
-          </div>
-
           <div className={styles.field}>
             <label className={styles.label}>De</label>
             <Input
+              data-cy="vendas-data-inicio"
               tipo="date"
-              valor={dataDe}
-              onChange={(e) => setDataDe(e.target.value)}
+              valor={dataInicio}
+              onChange={(e) => setDataInicio(e.target.value)}
             />
           </div>
-
           <div className={styles.field}>
             <label className={styles.label}>Até</label>
             <Input
+              data-cy="vendas-data-fim"
               tipo="date"
-              valor={dataAte}
-              onChange={(e) => setDataAte(e.target.value)}
+              valor={dataFim}
+              onChange={(e) => setDataFim(e.target.value)}
             />
           </div>
         </div>
 
-        <div className={styles.field}>
-          <label className={styles.label}>Exibição</label>
-          <div className={styles.exibicaoWrapper}>
-            <Select
-              valor={exibicao}
-              onChange={(e) => setExibicao(e.target.value)}
-              opcoes={EXIBICOES}
-              placeholder="Selecionar"
+        {periodoInvalido && (
+          <p className={styles.erroCampo}>
+            A data de fim não pode ser anterior à data de início.
+          </p>
+        )}
+
+        <div className={styles.categorias} data-cy="vendas-categorias">
+          {categorias.map((c) => (
+            <label key={c.id} className={styles.categoriaOpcao}>
+              <input
+                type="checkbox"
+                data-cy={`vendas-categoria-${c.id}`}
+                checked={selecionadas.includes(c.id)}
+                onChange={() => alternarCategoria(c.id)}
+              />
+              <span
+                className={styles.marcador}
+                style={{ background: cores[c.id] }}
+              />
+              {c.nome}
+            </label>
+          ))}
+        </div>
+
+        <Button
+          data-cy="vendas-consultar"
+          variante="primary"
+          disabled={!podeConsultar}
+          onClick={handleConsultar}
+        >
+          Consultar
+        </Button>
+
+        {erro && <p className={styles.erroCampo}>{erro}</p>}
+        {carregando && <p>Carregando...</p>}
+
+        {resultado && (
+          <div data-cy="vendas-grafico">
+            <SalesChart
+              dados={dadosGrafico}
+              categorias={categoriasNoGrafico}
+              cores={cores}
             />
           </div>
-        </div>
-
-        <div className={styles.chartArea}>
-          <SalesChart dados={DADOS_MOCK} />
-        </div>
-
-        <div className={styles.exportRow}>
-          <Button variante="primary" onClick={handleExportarGrafico}>
-            <Download size={16} />
-            Exportar gráfico
-          </Button>
-        </div>
+        )}
       </div>
     </div>
   );
