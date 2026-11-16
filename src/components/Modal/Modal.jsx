@@ -1,14 +1,21 @@
 import { X } from "lucide-react";
+
 import styles from "./Modal.module.css";
 
-function Modal({ aberto, onFechar, titulo, children }) {
+function Modal({ aberto, onFechar, titulo, children, ...resto }) {
+
   if (!aberto) return null;
 
   return (
     <div className={styles.overlay} onClick={onFechar}>
-      <div className={styles.content} onClick={(e) => e.stopPropagation()}>
+      <div
+        className={styles.content}
+        onClick={(e) => e.stopPropagation()}
+        {...resto}
+      >
         <div className={styles.header}>
           <h2 className={styles.title}>{titulo}</h2>
+
           <button
             type="button"
             className={styles.closeButton}
@@ -19,7 +26,9 @@ function Modal({ aberto, onFechar, titulo, children }) {
           </button>
         </div>
 
-        <div className={styles.body}>{children}</div>
+        <div className={styles.body}>
+          {children}
+        </div>
       </div>
     </div>
   );

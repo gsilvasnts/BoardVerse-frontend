@@ -1,5 +1,5 @@
-// components/PaymentMethods/PaymentMethods.jsx
 import { useState } from "react";
+import { Plus } from "lucide-react";
 import Input from "../Input/Input";
 import styles from "./PaymentMethods.module.css";
 
@@ -100,14 +100,17 @@ function PaymentMethods({ total }) {
                     <span>Crédito - Final $$$</span>
                   </label>
 
-                  <Input
-                    placeholder="Digite o valor"
-                    tipo="number"
-                    valor={valorCartao}
-                    onChange={(e) => setValorCartao(e.target.value)}
-                  />
+                  <div className={styles.valorWrapper}>
+                    <Input
+                      placeholder="Digite o valor"
+                      tipo="number"
+                      valor={valorCartao}
+                      onChange={(e) => setValorCartao(e.target.value)}
+                    />
+                  </div>
 
                   <button type="button" className={styles.addCardButton}>
+                    <Plus size={16} />
                     Adicionar novo cartão
                   </button>
                 </div>

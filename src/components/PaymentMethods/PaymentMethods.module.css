@@ -80,6 +80,10 @@
   padding-left: 26px;
 }
 
+.valorWrapper {
+  max-width: 160px;
+}
+
 .parcelaOption {
   display: flex;
   align-items: center;

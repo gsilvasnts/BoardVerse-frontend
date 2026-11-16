@@ -7,7 +7,7 @@ function Header() {
 
   return (
     <header className={styles.header}>
-      <h1 className={styles.logo}>BoardVerse</h1>
+      <h1 className={styles.logo}>🎲 BoardVerse</h1>
 
       <nav className={styles.navigation}>
         <ul>
